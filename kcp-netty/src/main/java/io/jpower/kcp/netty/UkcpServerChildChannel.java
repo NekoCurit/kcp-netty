@@ -1,21 +1,15 @@
 package io.jpower.kcp.netty;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.*;
+import io.netty.util.internal.StringUtil;
+import io.netty.util.internal.logging.InternalLogger;
+import io.netty.util.internal.logging.InternalLoggerFactory;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.List;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.AbstractChannel;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelMetadata;
-import io.netty.channel.ChannelOutboundBuffer;
-import io.netty.channel.ChannelPromise;
-import io.netty.channel.EventLoop;
-import io.netty.channel.nio.NioEventLoop;
-import io.netty.util.internal.StringUtil;
-import io.netty.util.internal.logging.InternalLogger;
-import io.netty.util.internal.logging.InternalLoggerFactory;
 
 /**
  * @author <a href="mailto:szhnet@gmail.com">szh</a>
@@ -82,7 +76,7 @@ public final class UkcpServerChildChannel extends AbstractChannel implements Ukc
 
     @Override
     protected boolean isCompatible(EventLoop loop) {
-        return loop instanceof NioEventLoop;
+        return true;
     }
 
     @Override

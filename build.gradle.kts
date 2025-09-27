@@ -1,4 +1,4 @@
-group = "io.jpower.kcp"
+group = "net.nekocurit.kcp"
 version = "1.6.0"
 
 plugins {

@@ -1,18 +1,18 @@
 package io.jpower.kcp.netty;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-
 import io.jpower.kcp.netty.internal.ReItrLinkedList;
 import io.jpower.kcp.netty.internal.ReusableListIterator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.util.internal.ObjectPool;
+import io.netty.util.Recycler;
 import io.netty.util.internal.ObjectPool.Handle;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Java implementation of <a href="https://github.com/skywind3000/kcp">KCP</a>
@@ -271,7 +271,12 @@ public class Kcp {
 
         private ByteBuf data;
 
-        private static final ObjectPool<Segment> RECYCLER = ObjectPool.newPool(Segment::new);
+        private static final Recycler<Segment> RECYCLER = new Recycler<Segment>() {
+            @Override
+            protected Segment newObject(Handle<Segment> handle) {
+                return new Segment(handle);
+            }
+        };
 
         private Segment(Handle<Segment> recyclerHandle) {
             this.recyclerHandle = recyclerHandle;
