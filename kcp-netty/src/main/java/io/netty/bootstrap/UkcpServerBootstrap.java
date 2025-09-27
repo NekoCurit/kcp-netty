@@ -113,13 +113,7 @@ public class UkcpServerBootstrap extends AbstractBootstrap<UkcpServerBootstrap, 
                     pipeline.addLast(handler);
                 }
 
-                ch.eventLoop().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        pipeline.addLast(new ServerUkcpBootstrapAcceptor(
-                                ch, currentChildHandler, currentChildOptions, currentChildAttrs));
-                    }
-                });
+                ch.eventLoop().execute(() -> pipeline.addLast(new ServerUkcpBootstrapAcceptor(ch, currentChildHandler, currentChildOptions, currentChildAttrs)));
             }
         });
     }
@@ -148,7 +142,6 @@ public class UkcpServerBootstrap extends AbstractBootstrap<UkcpServerBootstrap, 
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public void channelRead(ChannelHandlerContext ctx, Object msg) {
             Channel parent = ctx.channel();
             final Channel child = (Channel) msg;
@@ -159,12 +152,9 @@ public class UkcpServerBootstrap extends AbstractBootstrap<UkcpServerBootstrap, 
             setAttributes(child, childAttrs);
 
             try {
-                parent.eventLoop().register(child).addListener(new ChannelFutureListener() {
-                    @Override
-                    public void operationComplete(ChannelFuture future) throws Exception {
-                        if (!future.isSuccess()) {
-                            forceClose(child, future.cause());
-                        }
+                parent.eventLoop().register(child).addListener((ChannelFutureListener) future -> {
+                    if (!future.isSuccess()) {
+                        forceClose(child, future.cause());
                     }
                 });
             } catch (Throwable t) {
@@ -178,7 +168,7 @@ public class UkcpServerBootstrap extends AbstractBootstrap<UkcpServerBootstrap, 
         }
 
         @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
             // still let the exceptionCaught event flow through the pipeline to give the user
             // a chance to do something with it
             ctx.fireExceptionCaught(cause);
@@ -186,7 +176,6 @@ public class UkcpServerBootstrap extends AbstractBootstrap<UkcpServerBootstrap, 
     }
 
     @Override
-    @SuppressWarnings("CloneDoesntCallSuperClone")
     public UkcpServerBootstrap clone() {
         return new UkcpServerBootstrap(this);
     }

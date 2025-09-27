@@ -593,7 +593,7 @@ public class Kcp {
     }
 
     private void shrinkBuf() {
-        if (sndBuf.size() > 0) {
+        if (!sndBuf.isEmpty()) {
             Segment seg = sndBuf.peek();
             sndUna = seg.sn;
         } else {
@@ -677,7 +677,7 @@ public class Kcp {
         boolean repeat = false;
         boolean findPos = false;
         ListIterator<Segment> listItr = null;
-        if (rcvBuf.size() > 0) {
+        if (!rcvBuf.isEmpty()) {
             listItr = rcvBufItr.rewind(rcvBuf.size());
             while (listItr.hasPrevious()) {
                 Segment seg = listItr.previous();
@@ -1192,20 +1192,9 @@ public class Kcp {
     }
 
     public boolean checkFlush() {
-        if (ackcount > 0) {
-            return true;
-        }
-        if (probe != 0) {
-            return true;
-        }
-        if (sndBuf.size() > 0) {
-            return true;
-        }
-        if (sndQueue.size() > 0) {
-            return true;
-        }
-        return false;
+        return ackcount > 0 || probe != 0 || !sndBuf.isEmpty() || !sndQueue.isEmpty();
     }
+
 
     private void incrXmit(Segment seg) {
         if (++seg.xmit > metric.maxSegXmit()) {

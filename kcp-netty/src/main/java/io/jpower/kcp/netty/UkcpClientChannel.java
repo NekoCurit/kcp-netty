@@ -102,13 +102,10 @@ public final class UkcpClientChannel extends AbstractChannel implements UkcpChan
     }
 
     @Override
-    protected void doRegister() throws Exception {
-        eventLoop().register(udpChannel).addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if (!future.isSuccess()) {
-                    forceClose(future.cause());
-                }
+    protected void doRegister() {
+        eventLoop().register(udpChannel).addListener((ChannelFutureListener) future -> {
+            if (!future.isSuccess()) {
+                forceClose(future.cause());
             }
         });
     }
@@ -134,7 +131,7 @@ public final class UkcpClientChannel extends AbstractChannel implements UkcpChan
     }
 
     @Override
-    protected void doClose() throws Exception {
+    protected void doClose() {
         ukcp.setClosed(true);
         if (!closeAnother) {
             closeAnother = true;
@@ -185,7 +182,7 @@ public final class UkcpClientChannel extends AbstractChannel implements UkcpChan
     }
 
     @Override
-    protected final Object filterOutboundMessage(Object msg) {
+    protected Object filterOutboundMessage(Object msg) {
         if (msg instanceof ByteBuf) {
             return msg;
         }

@@ -48,7 +48,6 @@ public class DefaultUkcpClientChannelConfig extends DefaultChannelConfig impleme
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public Map<ChannelOption<?>, Object> getOptions() {
         return getOptions(
                 super.getOptions(),
@@ -118,7 +117,6 @@ public class DefaultUkcpClientChannelConfig extends DefaultChannelConfig impleme
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public <T> boolean setOption(ChannelOption<T> option, T value) {
         validate(option, value);
 

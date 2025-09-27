@@ -39,7 +39,6 @@ public class DefaultUkcpServerChildChannelConfig extends DefaultChannelConfig im
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public Map<ChannelOption<?>, Object> getOptions() {
         return getOptions(
                 super.getOptions(),
@@ -49,7 +48,7 @@ public class DefaultUkcpServerChildChannelConfig extends DefaultChannelConfig im
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "deprecation"})
+    @SuppressWarnings("unchecked")
     public <T> T getOption(ChannelOption<T> option) {
         if (option == UKCP_NODELAY) {
             return (T) Boolean.valueOf(isNodelay());

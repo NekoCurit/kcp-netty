@@ -90,22 +90,22 @@ public final class UkcpServerChildChannel extends AbstractChannel implements Ukc
     }
 
     @Override
-    protected void doBind(SocketAddress localAddress) throws Exception {
+    protected void doBind(SocketAddress localAddress) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected void doDisconnect() throws Exception {
+    protected void doDisconnect() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected void doClose() throws Exception {
+    protected void doClose() {
         parent().doCloseChildChannel(this); // callback parent
     }
 
     @Override
-    protected void doBeginRead() throws Exception {
+    protected void doBeginRead() {
         // read operation be control by parent
     }
 
@@ -147,7 +147,7 @@ public final class UkcpServerChildChannel extends AbstractChannel implements Ukc
     }
 
     @Override
-    protected final Object filterOutboundMessage(Object msg) {
+    protected Object filterOutboundMessage(Object msg) {
         if (msg instanceof ByteBuf) {
             return msg;
         }

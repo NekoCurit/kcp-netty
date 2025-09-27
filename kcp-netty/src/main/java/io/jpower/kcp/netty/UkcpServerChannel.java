@@ -176,7 +176,7 @@ public final class UkcpServerChannel extends AbstractNioMessageChannel implement
     }
 
     @Override
-    protected int doReadMessages(List<Object> buf) throws Exception {
+    protected int doReadMessages(List<Object> buf) {
         DatagramChannel ch = javaChannel();
         UkcpServerChannelConfig config = config();
         RecvByteBufAllocator.Handle allocHandle = unsafe().recvBufAllocHandle();
@@ -279,17 +279,17 @@ public final class UkcpServerChannel extends AbstractNioMessageChannel implement
     }
 
     @Override
-    protected boolean doConnect(SocketAddress remoteAddress, SocketAddress localAddress) throws Exception {
+    protected boolean doConnect(SocketAddress remoteAddress, SocketAddress localAddress) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected void doFinishConnect() throws Exception {
+    protected void doFinishConnect() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected void doDisconnect() throws Exception {
+    protected void doDisconnect() {
         throw new UnsupportedOperationException();
     }
 
@@ -414,14 +414,14 @@ public final class UkcpServerChannel extends AbstractNioMessageChannel implement
             }
         }
 
-        if (writeChannels.size() > 0) {
+        if (!writeChannels.isEmpty()) {
             for (UkcpServerChildChannel childCh : writeChannels) {
                 childCh.unsafe().forceFlush();
             }
             writeChannels.clear();
         }
 
-        if (closeWaitKcpMap.size() > 0) {
+        if (!closeWaitKcpMap.isEmpty()) {
             for (Iterator<Map.Entry<SocketAddress, CloseWaitKcp>> itr = closeWaitKcpMapItr.rewind(); itr.hasNext(); ) {
                 CloseWaitKcp w = itr.next().getValue();
                 Ukcp ukcp = w.ukcp;
@@ -463,13 +463,8 @@ public final class UkcpServerChannel extends AbstractNioMessageChannel implement
 
         tsUpdate = nextTsUpdate;
         scheduleUpdate = nextSchedule;
-        if (nextSchedule) {
-            scheduleUpdate(tsUpdate, current);
-        }
-
-        if (closeChildList.size() > 0) {
-            handleCloseChildList();
-        }
+        if (nextSchedule) scheduleUpdate(tsUpdate, current);
+        if (!closeChildList.isEmpty()) handleCloseChildList();
     }
 
     void updateChildKcp(UkcpServerChildChannel childCh) {

@@ -32,7 +32,6 @@ public class DefaultUkcpServerChannelConfig extends DefaultChannelConfig impleme
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public Map<ChannelOption<?>, Object> getOptions() {
         return getOptions(
                 super.getOptions(),
@@ -40,7 +39,7 @@ public class DefaultUkcpServerChannelConfig extends DefaultChannelConfig impleme
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "deprecation"})
+    @SuppressWarnings("unchecked")
     public <T> T getOption(ChannelOption<T> option) {
         if (option == SO_RCVBUF) {
             return (T) Integer.valueOf(getUdpReceiveBufferSize());

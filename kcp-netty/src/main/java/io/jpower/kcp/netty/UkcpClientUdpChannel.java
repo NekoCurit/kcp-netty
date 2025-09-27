@@ -144,7 +144,7 @@ final class UkcpClientUdpChannel extends AbstractNioMessageChannel {
     }
 
     @Override
-    protected void doFinishConnect() throws Exception {
+    protected void doFinishConnect() {
         throw new Error();
     }
 
@@ -172,7 +172,7 @@ final class UkcpClientUdpChannel extends AbstractNioMessageChannel {
     }
 
     @Override
-    protected int doReadMessages(List<Object> buf) throws Exception {
+    protected int doReadMessages(List<Object> buf) {
         DatagramChannel ch = javaChannel();
         ChannelConfig config = config();
         RecvByteBufAllocator.Handle allocHandle = unsafe().recvBufAllocHandle();
