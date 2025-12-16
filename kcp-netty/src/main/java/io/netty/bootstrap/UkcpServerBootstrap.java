@@ -95,7 +95,11 @@ public class UkcpServerBootstrap extends AbstractBootstrap<UkcpServerBootstrap, 
 
     @Override
     void init(Channel channel) {
-        setChannelOptions(channel, newOptionsArray(), logger);
+        try {
+            setChannelOptions(channel, newOptionsArray(), logger);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
         setAttributes(channel, newAttributesArray());
 
         ChannelPipeline p = channel.pipeline();
@@ -148,10 +152,10 @@ public class UkcpServerBootstrap extends AbstractBootstrap<UkcpServerBootstrap, 
 
             child.pipeline().addLast(childHandler);
 
-            setChannelOptions(child, childOptions, logger);
-            setAttributes(child, childAttrs);
-
             try {
+                setChannelOptions(child, childOptions, logger);
+                setAttributes(child, childAttrs);
+
                 parent.eventLoop().register(child).addListener((ChannelFutureListener) future -> {
                     if (!future.isSuccess()) {
                         forceClose(child, future.cause());
